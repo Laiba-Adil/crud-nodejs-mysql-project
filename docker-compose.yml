@@ -2,13 +2,16 @@ version: "3.8"
 
 services:
   app:
-    build: .
+    image: node:18
     container_name: node_app
-    restart: always
+    working_dir: /app
+    volumes:
+      - .:/app
     ports:
       - "3000:3000"
     depends_on:
       - db
+    command: sh -c "npm install && npm start"
     environment:
       DB_HOST: db
       DB_USER: root
