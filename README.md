@@ -6,3 +6,4 @@ this is a basic application crud that uses nodejs in the backend, mysql as datab
 
 # links
 - [bootstrap 4 theme](https://bootswatch.com/4/lux/bootstrap.min.css)
+Testing Jenkins CI/CD
