@@ -11,10 +11,10 @@ pipeline {
         }
 
         stage('Docker Deploy') {
-            steps {
-                sh 'docker compose down || true'
-                sh 'docker compose up -d'
-            }
+                steps {
+                  sh 'docker-compose down || true'
+                  sh 'docker-compose up -d'
+               }
         }
     }
 }
