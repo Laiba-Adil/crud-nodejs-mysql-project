@@ -3,18 +3,17 @@ pipeline {
 
     stages {
 
-        stage('Clone Repo') {
+        stage('Checkout') {
             steps {
-                git branch: 'main',
-                url: 'https://github.com/Laiba-Adil/crud-nodejs-mysql-project.git'
+                git url: 'https://github.com/Laiba-Adil/crud-nodejs-mysql-project.git', branch: 'main'
             }
         }
 
-        stage('Docker Deploy') {
-                steps {
-                  sh 'docker-compose down || true'
-                  sh 'docker-compose up -d'
-               }
+        stage('Deploy') {
+            steps {
+                sh 'docker-compose down || true'
+                sh 'docker-compose up -d'
+            }
         }
     }
 }
