@@ -8,16 +8,16 @@ pipeline {
             }
         }
         stage('Deploy') {
-    steps {
-        sh '''
-            cd $WORKSPACE
-            docker-compose down --remove-orphans
-            docker rm -f mysql_db node_app || true
-            docker-compose up -d
-            sleep 20
-        '''
-    }
-} 
+            steps {
+                sh '''
+                    docker rm -f mysql_db node_app || true
+                    docker-compose -f $WORKSPACE/docker-compose.yml down --remove-orphans || true
+                    docker-compose -f $WORKSPACE/docker-compose.yml up -d
+                    sleep 40
+                    docker ps
+                '''
+            }
+        }
         stage('Database Setup') {
             steps {
                 sh '''
@@ -28,6 +28,7 @@ pipeline {
         stage('Health Check') {
             steps {
                 sh '''
+                    sleep 10
                     curl -f http://localhost:3001 || exit 1
                 '''
             }
@@ -35,8 +36,8 @@ pipeline {
     }
     post {
         always {
-            sh 'docker-compose logs --tail=50 || true'
-            cleanWs()
+            sh 'docker-compose -f $WORKSPACE/docker-compose.yml logs --tail=50 || true'
+            // REMOVED cleanWs() - it was killing containers
         }
         success {
             echo 'Pipeline executed successfully!'
