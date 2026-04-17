@@ -1,15 +1,12 @@
 pipeline {
     agent any
-
     stages {
         stage('Checkout') {
             steps {
                 git url: 'https://github.com/Laiba-Adil/crud-nodejs-mysql-project.git', 
-                    branch: 'main',
-                    clean: true
+                    branch: 'main'
             }
         }
-
         stage('Deploy') {
             steps {
                 sh '''
@@ -20,16 +17,13 @@ pipeline {
                 '''
             }
         }
-
         stage('Database Setup') {
             steps {
                 sh '''
-                    # Create the customer table if it doesn't exist
                     docker exec mysql_db mysql -uroot -proot -e "USE testdb; CREATE TABLE IF NOT EXISTS customer (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(100) NOT NULL, email VARCHAR(100) NOT NULL UNIQUE, phone VARCHAR(20), created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);" || true
                 '''
             }
         }
-
         stage('Health Check') {
             steps {
                 sh '''
@@ -38,10 +32,10 @@ pipeline {
             }
         }
     }
-
     post {
         always {
             sh 'docker-compose logs --tail=50 || true'
+            cleanWs()
         }
         success {
             echo 'Pipeline executed successfully!'
@@ -51,4 +45,3 @@ pipeline {
         }
     }
 }
-
