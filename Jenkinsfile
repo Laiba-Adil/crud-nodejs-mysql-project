@@ -8,15 +8,16 @@ pipeline {
             }
         }
         stage('Deploy') {
-            steps {
-                sh '''
-                    cd $WORKSPACE
-                    docker-compose down || true
-                    docker-compose up -d
-                    sleep 20
-                '''
-            }
-        }
+    steps {
+        sh '''
+            cd $WORKSPACE
+            docker-compose down --remove-orphans
+            docker rm -f mysql_db node_app || true
+            docker-compose up -d
+            sleep 20
+        '''
+    }
+} 
         stage('Database Setup') {
             steps {
                 sh '''
